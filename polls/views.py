@@ -6,7 +6,7 @@ from .models import Question, Choice
 
 
 def index(request):
-    latest_three_questions = get_list_or_404(Question.objects.order_by('pub_date')[:3])
+    latest_three_questions = get_list_or_404(Question.objects.order_by('pub_date'))
     return render(request, 'polls/index.html', {'latest_question_list' : latest_three_questions,})
 
 
@@ -19,7 +19,7 @@ def vote(request, question_id):
     else:
         selected_choice.votes += 1
         selected_choice.save()
-        return HttpResponseRedirect(reverse('polls:results',args=(question_id,)))
+        return HttpResponseRedirect(reverse('polls:result',args=(question_id,)))
 
 
 def detail(request, question_id):
@@ -28,4 +28,4 @@ def detail(request, question_id):
 
 
 def result(request, question_id):
-    return render(request, 'polls/result.html', {'question':question})
+    return render(request, 'polls/result.html', {'question':Question.objects.get(pk=question_id)})
