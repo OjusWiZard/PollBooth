@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
 
-from .models import Choice, Question
+from .models import Choice, Question, User
 
 
 class IndexView(generic.ListView):
@@ -35,8 +35,31 @@ def vote(request, question_id):
         selected_choice.save()
         return HttpResponseRedirect(reverse('polls:result',args=(question_id,)))
 
-def login(request):
+def registration(request):
+    return render(request,'polls/registration.html')
+
+def loginPage(request):
     return render(request,'polls/login.html')
 
 def register(request):
-    return render(request,'polls/register.html')
+    email = request.POST['email']
+    psw = request.POST['psw']
+    psw_repeat = request.POST['psw-repeat']
+
+    if( psw != psw_repeat ):
+        return HttpResponseRedirect(reverse('polls:registration'))
+    
+    if( User.objects.filter(email=email).count()>0 ):
+        return HttpResponseRedirect(reverse('polls:loginPage'))
+    
+    else:
+        User.objects.create(email=email,password=psw)
+        return HttpResponseRedirect(reverse('polls:loginPage'))
+
+def login(request):
+    email = request.POST['email']
+    psw = request.POST['psw']
+    if( User.objects.filter(email=email,password=psw).count()==1 ):
+        return HttpResponseRedirect(reverse('polls:index'))
+    else:
+        return HttpResponseRedirect(reverse('polls:loginPage'))

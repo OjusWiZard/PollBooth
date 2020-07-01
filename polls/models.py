@@ -18,7 +18,7 @@ class Choice(models.Model):
         return self.choice_text
 
 class User(models.Model):
-    username = models.CharField(max_length=32)
+    email = models.EmailField(max_length=32,unique=True,default='example@example.com')
     password = models.CharField(max_length=32)
 
     def __str__(self):

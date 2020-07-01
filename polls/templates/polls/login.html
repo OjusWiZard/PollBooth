@@ -1,1 +1,15 @@
-<h3>Login</h3>
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'polls/styles/login.css' %}">
+
+<form action="{% url 'polls:login' %}" method="POST">
+{% csrf_token %}
+    <div class="container">
+      <label for="email"><b>Email</b></label>
+      <input type="text" placeholder="Enter Email" name="email" required>
+  
+      <label for="psw"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="psw" required>
+  
+      <button type="submit">Login</button>
+    </div>
+  </form>
